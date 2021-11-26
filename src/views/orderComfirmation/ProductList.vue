@@ -3,20 +3,48 @@
     <div class="products__title">{{ shopName }}</div>
     <div class="products__wrapper">
       <div class="products__list">
-        <div class="products__item" v-for="item in productList" :key="item.id">
-          <img :src="item.imgUrl" class="products__item__img" />
-          <div class="products__item__details">
-            <h4 class="products__item__title">{{ item.name }}</h4>
-            <p class="products__item__price">
-              <span>
-                <span class="products__item__yen">&yen;</span>{{ item.price }} x
-                {{ item.count }}
-              </span>
-              <span class="products__item__total">
-                <span class="products__item__yen">&yen;</span
-                >{{ (item.price * item.count).toFixed(2) }}
-              </span>
-            </p>
+        <div class="products__list__items">
+          <div
+            class="products__item"
+            v-for="item in productsSimpleList"
+            :key="item.id"
+            v-show="item.showProduct"
+          >
+            <img :src="item.imgUrl" class="products__item__img" />
+            <div class="products__item__details">
+              <h4 class="products__item__title">{{ item.name }}</h4>
+              <p class="products__item__price">
+                <span>
+                  <span class="products__item__yen">&yen;</span
+                  >{{ item.price }} x
+                  {{ item.count }}
+                </span>
+                <span class="products__item__total">
+                  <span class="products__item__yen">&yen;</span
+                  >{{ (item.price * item.count).toFixed(2) }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="products__total">
+          <div class="products__total__wrapper">
+            <div
+              class="products__total__wrapper__desc"
+              @click="handleShowProductList"
+            >
+              共计{{productsSimpleList.length}}种
+              <span
+                class="products__total__wrapper__icon iconfont"
+                :class="[
+                  showProductList
+                    ? 'products__total__wrapper__icon__up'
+                    : 'products__total__wrapper__icon__down',
+                ]"
+                >&#xe6db;</span
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -25,6 +53,7 @@
 </template>
 
 <script>
+import { ref } from "vue";
 import { useCommonCartEffect } from "../../effects/cartEffect";
 import { useRoute } from "vue-router";
 export default {
@@ -33,9 +62,26 @@ export default {
     const route = useRoute();
     const shopId = route.params.id;
     const { productList, shopName } = useCommonCartEffect(shopId);
+    const productsSimpleList = [];
+    const showProductList = ref(false);
+    Object.values(productList.value).forEach((value) => {
+      value.showProduct = showProductList.value;
+      productsSimpleList.push(value);
+    });
+    for (let i = 0; i < 2; i++) {
+      productsSimpleList[i].showProduct = true;
+    }
+    const handleShowProductList = () => {
+      showProductList.value = !showProductList.value;
+      for (let i = 2; i < productsSimpleList.length; i++) {
+        productsSimpleList[i].showProduct = showProductList.value;
+      }
+    };
     return {
-      productList,
       shopName,
+      productsSimpleList,
+      handleShowProductList,
+      showProductList,
     };
   },
 };
@@ -98,6 +144,39 @@ export default {
     }
     &__yen {
       font-size: 0.12rem;
+    }
+  }
+  &__total {
+    background: $bgColor;
+    height: 0.44rem;
+    position: relative;
+    &__wrapper {
+      margin-top: 0.16rem;
+      height: 0.28rem;
+      background: $search-bgColor;
+      position: absolute;
+      bottom: 0.16rem;
+      left: 0.16rem;
+      right: 0.16rem;
+      &__desc {
+        text-align: center;
+        line-height: 0.24rem;
+        font-size: 0.14rem;
+        color: $light-fontColor;
+      }
+      &__icon {
+        display: inline-block;
+        text-align: center;
+        font-size: 0.2rem;
+        color: $light-fontColor;
+        &__up {
+          transform: rotate(90deg);
+          padding-left: 0.04rem;
+        }
+        &__down {
+          transform: rotate(270deg);
+        }
+      }
     }
   }
 }

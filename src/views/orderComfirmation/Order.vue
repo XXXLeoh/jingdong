@@ -7,21 +7,28 @@
   </div>
   <div class="mask" v-show="showMask" @click="handleSubmit(false)">
     <div class="mask__content" @click.stop>
-      <h3 class="mask__content__title">确认离开收银台吗？</h3>
-      <p class="mask__content__desc">请尽快完成支付，否则将被取消</p>
-      <div class="mask__content__btns">
-        <div
-          class="mask__content__btn mask__content__btn--first"
-          @click="handleConfirmClick(true)"
-        >
-          取消订单
+      <div v-if="showOrderSuccess">
+        <h3 class="mask__content__title">确认离开收银台吗？</h3>
+        <p class="mask__content__desc">请尽快完成支付，否则将被取消</p>
+        <div class="mask__content__btns">
+          <div
+            class="mask__content__btn mask__content__btn--first"
+            @click="handleConfirmClick(true)"
+          >
+            取消订单
+          </div>
+          <div
+            class="mask__content__btn mask__content__btn--last"
+            @click="handleConfirmClick(false)"
+          >
+            确认支付
+          </div>
         </div>
-        <div
-          class="mask__content__btn mask__content__btn--last"
-          @click="handleConfirmClick(false)"
-        >
-          确认支付
-        </div>
+      </div>
+      <div class="mask__content__orderSuccess" v-else>
+        <div class="mask__content__orderSuccess__close iconfont">&#xe6dc;</div>
+        <div class="mask__content__orderSuccess__tick iconfont">&#xe642;</div>
+        <div class="mask__content__orderSuccess__desc">支付成功，等待配送</div>
       </div>
     </div>
     <Toast v-show="showToast" :message="toastMessage" />
@@ -37,9 +44,10 @@ import { post } from "../../utils/request";
 import Toast, { useToastEffect } from "../../components/Toast.vue";
 
 // 订单相关逻辑
-const useMakeOrderEffect = (shopId,shopName, productList) => {
+const useMakeOrderEffect = (shopId, shopName, productList) => {
   const router = useRouter();
   const store = useStore();
+  const showOrderSuccess = ref(true);
   const { showToast, toastMessage, showToastFun } = useToastEffect();
   const handleConfirmClick = async (isCanceled) => {
     const products = [];
@@ -56,8 +64,13 @@ const useMakeOrderEffect = (shopId,shopName, productList) => {
         products,
       });
       if (result?.errno === 0) {
-        store.commit("clearCart", shopId);
-        router.push({ name: "OrderList" });
+        showOrderSuccess.value = isCanceled;
+        setTimeout(() => {
+          router.push({ name: "OrderList" });
+          setTimeout(() => {
+            store.commit("clearCart", shopId);
+          }, 0);
+        }, 2000);
       } else {
         showToastFun("支付失败");
       }
@@ -65,7 +78,7 @@ const useMakeOrderEffect = (shopId,shopName, productList) => {
       showToastFun("网络请求失败");
     }
   };
-  return { showToast, toastMessage, handleConfirmClick };
+  return { showOrderSuccess, showToast, toastMessage, handleConfirmClick };
 };
 // 蒙层相关逻辑
 const useShowMaskEffect = () => {
@@ -85,14 +98,13 @@ export default {
     const route = useRoute();
     const shopId = parseInt(route.params.id);
     const { caculations, shopName, productList } = useCommonCartEffect(shopId);
-    const { showToast, toastMessage, handleConfirmClick } = useMakeOrderEffect(
-      shopId,
-      shopName,
-      productList
-    );
+    const { showOrderSuccess, showToast, toastMessage, handleConfirmClick } =
+      useMakeOrderEffect(shopId, shopName, productList);
+    console.log(showOrderSuccess.value);
     const { showMask, handleSubmit } = useShowMaskEffect();
     return {
       caculations,
+      showOrderSuccess,
       showToast,
       toastMessage,
       handleConfirmClick,
@@ -176,6 +188,25 @@ export default {
         margin-left: 0.12rem;
         background: #4fb0f9;
         color: #fff;
+      }
+    }
+    &__orderSuccess {
+      &__close {
+        color: $medium-fontColor;
+        font-size: 0.3rem;
+        position: absolute;
+        top: 0.02rem;
+        right: 0.02rem;
+      }
+      &__tick {
+        font-size: 0.4rem;
+        margin-top: 0.42rem;
+      }
+      &__desc {
+        font-size: 18px;
+        color: $content-fontcolor;
+        line-height: 0.25rem;
+        margin-top: 0.18rem;
       }
     }
   }
