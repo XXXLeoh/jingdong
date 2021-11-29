@@ -67,9 +67,7 @@ const useMakeOrderEffect = (shopId, shopName, productList) => {
         showOrderSuccess.value = isCanceled;
         setTimeout(() => {
           router.push({ name: "OrderList" });
-          setTimeout(() => {
-            store.commit("clearCart", shopId);
-          }, 0);
+          store.commit("clearCart", shopId);
         }, 2000);
       } else {
         showToastFun("支付失败");

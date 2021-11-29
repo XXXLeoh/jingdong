@@ -28,13 +28,13 @@
           </div>
         </div>
 
-        <div class="products__total">
+        <div class="products__total" v-if="productsSimpleList.length > 2">
           <div class="products__total__wrapper">
             <div
               class="products__total__wrapper__desc"
               @click="handleShowProductList"
             >
-              共计{{productsSimpleList.length}}种
+              共计{{ productsSimpleList.length }}种
               <span
                 class="products__total__wrapper__icon iconfont"
                 :class="[

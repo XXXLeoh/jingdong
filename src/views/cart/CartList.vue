@@ -1,36 +1,9 @@
 <template>
   <div class="wrapper">
     <div class="title">我的全部购物车（2）</div>
-    <div class="orders">
-      <div class="order" v-for="(item, index) in list" :key="index">
-        <div class="order__title">
-          {{ item.shopName }}
-          <span class="order__status">
-            {{ item.isCanceled ? "已取消" : "已下单" }}
-          </span>
-        </div>
-        <div class="order__content">
-          <div class="order__content__imgs">
-            <template
-              v-for="(innerItem, index) in item.products"
-              :key="index"
-            >
-              <img
-                :src="innerItem.product.img"
-                class="order__content__img"
-                v-if="index <= 3"
-              />
-            </template>
-          </div>
-          <div class="order__content__info">
-            <div class="order__content__price">¥{{item.totalPrice}}</div>
-            <div class="order__content__count">共{{item.totalNum}}件</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    
   </div>
-  <Docker :currentIndex="2" />
+  <Docker :currentIndex="1" />
 </template>
 
 <script>
@@ -92,48 +65,5 @@ export default {
   text-align: center;
   color: $content-fontcolor;
   background: $bgColor;
-}
-.order {
-  margin: 0.16rem 0.18rem;
-  padding: 0.16rem;
-  background: $bgColor;
-  &__title {
-    margin-bottom: 0.16rem;
-    font-size: 0.16rem;
-    color: $content-fontcolor;
-    line-height: 0.22rem;
-  }
-  &__status {
-    float: right;
-    font-size: 0.14rem;
-    color: $light-fontColor;
-  }
-  &__content {
-    display: flex;
-    &__imgs {
-      flex: 1;
-    }
-    &__img {
-      width: 0.4rem;
-      height: 0.4rem;
-      margin-right: 0.12rem;
-    }
-    &__info {
-      width: 0.7rem;
-    }
-    &__price {
-      margin-bottom: 0.04rem;
-      line-height: 0.2rem;
-      font-size: 0.14rem;
-      color: $highlight-fontColor;
-      text-align: right;
-    }
-    &__count {
-      line-height: 0.14rem;
-      font-size: 0.12rem;
-      color: $content-fontcolor;
-      text-align: right;
-    }
-  }
 }
 </style>
