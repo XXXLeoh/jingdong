@@ -64,6 +64,7 @@ export default {
     const { productList, shopName } = useCommonCartEffect(shopId);
     const productsSimpleList = [];
     const showProductList = ref(false);
+    // 数据结构改为数组类型，添加length属性
     Object.values(productList.value).forEach((value) => {
       value.showProduct = showProductList.value;
       productsSimpleList.push(value);
@@ -101,12 +102,7 @@ export default {
   }
   &__wrapper {
     overflow-y: scroll;
-    margin: 0 0.18rem;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0.6rem;
-    top: 2.58rem;
+    margin: 0 0.16rem;
   }
   &__list {
     background: $bgColor;
@@ -114,7 +110,7 @@ export default {
   &__item {
     position: relative;
     display: flex;
-    padding: 0 0.16rem 0.16rem 0.16rem;
+    padding: 0 0 0.16rem 0;
     &__img {
       width: 0.46rem;
       height: 0.46rem;
@@ -156,8 +152,8 @@ export default {
       background: $search-bgColor;
       position: absolute;
       bottom: 0.16rem;
-      left: 0.16rem;
-      right: 0.16rem;
+      left: 0rem;
+      right: 0rem;
       &__desc {
         text-align: center;
         line-height: 0.24rem;
