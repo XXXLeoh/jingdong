@@ -1,6 +1,6 @@
 <template>
+  <div class="title">我的全部购物车（2）</div>
   <div class="wrapper">
-    <div class="title">我的全部购物车（2）</div>
     <div class="products" v-for="(item, index) in cartList" :key="index">
       <div class="products__title">{{ item.shopName }}</div>
       <div class="products__wrapper">
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import {ref} from 'vue'
+import { ref } from "vue";
 import { useStore } from "vuex";
 import Docker from "../../components/Docker.vue";
 export default {
@@ -73,7 +73,7 @@ export default {
       value.upOrDown = false;
       value.newProductList = [];
       Object.values(value.productList).forEach((product) => {
-        product.showProduct = showProduct.value
+        product.showProduct = showProduct.value;
         value.newProductList.push(product);
       });
       for (let i = 0; i < 2; i++) {
@@ -83,8 +83,8 @@ export default {
     const handleShowProductList = (index) => {
       cartList[index].upOrDown = !cartList[index].upOrDown;
       showProduct.value = !showProduct.value;
-      for(let i=2;i<cartList[index].newProductList.length;i++){
-        cartList[index].newProductList[i].showProduct = showProduct.value
+      for (let i = 2; i < cartList[index].newProductList.length; i++) {
+        cartList[index].newProductList[i].showProduct = showProduct.value;
       }
     };
     return {
@@ -102,7 +102,7 @@ export default {
   overflow-y: auto;
   position: absolute;
   left: 0;
-  top: 0;
+  top: .44rem;
   right: 0;
   bottom: 0.5rem;
   background: #f8f8f8;
@@ -113,6 +113,11 @@ export default {
   text-align: center;
   color: $content-fontcolor;
   background: $bgColor;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
 }
 .products {
   margin: 0.16rem 0.18rem;

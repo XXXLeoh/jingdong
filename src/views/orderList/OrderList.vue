@@ -1,6 +1,7 @@
 <template>
+<div class="title">我的订单</div>
   <div class="wrapper">
-    <div class="title">我的订单</div>
+    
     <div class="orders">
       <div class="order" v-for="(item, index) in list" :key="index">
         <div class="order__title">
@@ -81,7 +82,7 @@ export default {
   overflow-y: auto;
   position: absolute;
   left: 0;
-  top: 0;
+  top: .44rem;
   right: 0;
   bottom: 0.5rem;
   background: #f8f8f8;
@@ -92,6 +93,11 @@ export default {
   text-align: center;
   color: $content-fontcolor;
   background: $bgColor;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
 }
 .order {
   margin: 0.16rem 0.18rem;
